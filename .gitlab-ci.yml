@@ -1,0 +1,45 @@
+stages:
+  - build
+
+services:
+  - name: docker:dind
+    command:
+      - "--experimental"
+
+variables:
+  DOCKER_BUILDKIT: "1"
+  DOCKER_DRIVER: overlay2
+  DOCKER_TLS_CERTDIR: /certs
+  DOCKER_CLI_EXPERIMENTAL: enabled
+
+.docker: &docker
+  stage: build
+  image: docker:git
+  only:
+    - main
+    - schedules
+  retry: 2
+  script:
+    # Install docker buildx.
+    - git clone https://github.com/docker/buildx /tmp/buildx && docker build --platform=local -o . /tmp/buildx
+    - mkdir -p ~/.docker/cli-plugins && mv buildx ~/.docker/cli-plugins/docker-buildx
+    # Create docker context.
+    - docker context create tls-environment
+    # Load QEMU emulation layers.
+    - docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
+    # Login to GitLab Docker registry.
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
+    # Create builder instance.
+    - docker buildx create --use tls-environment --driver docker-container --name multiarch-builder
+    # Bootstrap builder instance.
+    - docker buildx inspect --bootstrap
+    # Build, tag and push image image.
+    - docker buildx build --push --platform $PLATFORMS -t $CI_REGISTRY_IMAGE:latest-$TAG .
+    # Logout from GitLab Docker registry.
+    - docker logout $CI_REGISTRY
+
+build-docker-amd64:
+  variables:
+    PLATFORMS: linux/amd64
+    TAG: amd64
+  <<: *docker

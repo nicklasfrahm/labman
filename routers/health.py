@@ -1,8 +1,9 @@
 import socket
-from datetime import datetime
+from time import timezone
+from datetime import datetime, timezone
 from quart import Blueprint
 
-started_at = datetime.utcnow().isoformat()
+started_at = f"{datetime.now(timezone.utc).replace(microsecond=0).isoformat()[:-6]}Z"
 hostname = socket.gethostname()
 blueprint = Blueprint("health", __name__)
 

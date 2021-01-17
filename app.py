@@ -1,5 +1,5 @@
 from quart import Quart
-from resources import health
+from routers import health
 
 app = Quart(__name__)
 app.register_blueprint(health.blueprint)

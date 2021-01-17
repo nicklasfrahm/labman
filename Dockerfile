@@ -20,6 +20,6 @@ COPY --from=build /venv /venv
 WORKDIR /app
 ADD hypercorn.toml /app/hypercorn.toml
 ADD app.py /app/app.py
-ADD resources/ /app/resources/
+ADD routers/ /app/routers/
 EXPOSE 5000
 ENTRYPOINT [ "/venv/bin/python3", "-m", "hypercorn", "-c", "hypercorn.toml", "app:app" ]

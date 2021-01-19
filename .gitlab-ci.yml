@@ -23,7 +23,7 @@ variables:
     # Add container registry credentials.
     - |
       mkdir -m 700 -p ~/.docker
-      cat << EOF > ~/.docker/daemon.json
+      cat << EOF > ~/.docker/config.json
       {
         "auths": {
           "$CI_REGISTRY": {
@@ -43,7 +43,7 @@ variables:
           --import-cache type=registry,ref=$CI_REGISTRY_IMAGE/$ARCH \
           --export-cache type=inline
     # Remove container registry credentials.
-    - rm ~/.docker/daemon.json
+    - rm ~/.docker/config.json
 
 build-docker-amd64:
   variables:

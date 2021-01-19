@@ -12,55 +12,40 @@ variables:
   DOCKER_TLS_CERTDIR: /certs
   DOCKER_CLI_EXPERIMENTAL: enabled
 
-.docker: &docker
+.buildkit: &buildkit
   stage: build
-  image: docker:latest
-  only:
-    - main
-    - schedules
-  retry: 2
+  image:
+    name: moby/buildkit:rootless
+    entrypoint: [ "sh", "-c" ]
+  variables:
+    BUILDKITD_FLAGS: --oci-worker-no-process-sandbox
   script:
-    # Install docker buildx.
-    - export BUILDX_VERSION=$(wget --spider -S "https://github.com/docker/buildx/releases/latest" 2>&1 | grep -m 1 'Location' | tr '/' ' ' | awk '{ print $8; }')
-    - mkdir -p ~/.docker/cli-plugins
-    - wget -qO ~/.docker/cli-plugins/docker-buildx "https://github.com/docker/buildx/releases/download/$BUILDX_VERSION/buildx-$BUILDX_VERSION.linux-$BUILDX_ARCH"
-    - chmod a+x ~/.docker/cli-plugins/docker-buildx
-    # Create docker context.
-    - docker context create tls-environment
-    # Load QEMU emulation layers.
-    - docker run --rm --privileged multiarch/qemu-user-static --reset -p yes
-    # Login to GitLab Docker registry.
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY
-    # Create builder instance.
-    - docker buildx create --use tls-environment --driver docker-container --name multiarch-builder
-    # Bootstrap builder instance.
-    - docker buildx inspect --bootstrap
-    # Build, tag and push image image.
-    - docker buildx build --push --platform $PLATFORMS -t $CI_REGISTRY_IMAGE:latest-$TAG .
-    # Logout from GitLab Docker registry.
-    - docker logout $CI_REGISTRY
+    # Add container registry credentials.
+    - |
+      REGISTRY_CREDENTIALS=$(echo -n "$CI_REGISTRY_USER:$CI_REGISTRY_PASSWORD" | base64 -w 0)
+      mkdir -m 700 -p ~/.docker
+      cat << EOF > ~/.docker/daemon.json
+      {
+        "auths": {
+          "$CI_REGISTRY": {
+            "auth": "$REGISTRY_CREDENTIALS"
+          }
+        }
+      }
+      EOF
+    # Build and push container image.
+    - |
+      buildctl-daemonless.sh build \
+          --frontend=dockerfile.v0 \
+          --local context=. \
+          --local dockerfile=. \
+          --output type=image,name=$CI_REGISTRY_IMAGE/$ARCH,push=true \
+          --import-cache type=registry,ref=$CI_REGISTRY_IMAGE/$ARCH \
+          --export-cache type=inline
+    # Remove container registry credentials.
+    - rm ~/.docker/daemon.json
 
 build-docker-amd64:
   variables:
-    BUILDX_ARCH: amd64
-    PLATFORMS: linux/amd64
-    TAG: amd64
-  <<: *docker
-
-build-docker-arm32v7:
-  variables:
-    BUILDX_ARCH: arm-v7
-    PLATFORMS: linux/arm/v7
-    TAG: arm32v7
-  tags:
-    - arch=arm32v7
-  <<: *docker
-
-build-docker-arm64v8:
-  variables:
-    BUILDX_ARCH: arm64
-    PLATFORMS: linux/arm64
-    TAG: arm64v8
-  tags:
-    - arch=arm64v8
-  <<: *docker
+    ARCH: amd64
+  <<: *buildkit

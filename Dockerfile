@@ -11,6 +11,7 @@ RUN apt-get update && \
 # Build the virtualenv as a separate step to only re-execute this step when "requirements.txt" changes.
 FROM dependencies AS build
 COPY requirements.txt /requirements.txt
+RUN ls -lah /venv && ls -lah /venv/bin
 RUN /venv/bin/pip install --disable-pip-version-check -r /requirements.txt
 
 # Copy the virtualenv into a distroless image.

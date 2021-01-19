@@ -53,7 +53,7 @@ build-docker-arm32v7:
     PLATFORMS: linux/arm/v7
     TAG: arm32v7
   tags:
-    - arm32v7
+    - arch=arm32v7
   <<: *docker
 
 build-docker-arm64v8:
@@ -62,5 +62,5 @@ build-docker-arm64v8:
     PLATFORMS: linux/arm64
     TAG: arm64v8
   tags:
-    - arm64v8
+    - arch=arm64v8
   <<: *docker

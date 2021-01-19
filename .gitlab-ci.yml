@@ -46,3 +46,17 @@ build-docker-amd64:
     PLATFORMS: linux/amd64
     TAG: amd64
   <<: *docker
+
+build-docker-arm32v7:
+  variables:
+    BUILDX_ARCH: arm-v7
+    PLATFORMS: linux/arm/v7
+    TAG: arm32v7
+  <<: *docker
+
+build-docker-arm64v8:
+  variables:
+    BUILDX_ARCH: arm64
+    PLATFORMS: linux/arm64
+    TAG: arm64v8
+  <<: *docker

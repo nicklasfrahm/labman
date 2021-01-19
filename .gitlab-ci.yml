@@ -20,17 +20,15 @@ variables:
   variables:
     BUILDKITD_FLAGS: --oci-worker-no-process-sandbox
   script:
-    # Ensures that the "base64" command accepts the "-w 0" flag.
-    - apk add --update coreutils
     # Add container registry credentials.
     - |
-      REGISTRY_CREDENTIALS=$(echo -n "$CI_REGISTRY_USER:$CI_REGISTRY_PASSWORD" | base64 -w 0)
       mkdir -m 700 -p ~/.docker
       cat << EOF > ~/.docker/daemon.json
       {
         "auths": {
           "$CI_REGISTRY": {
-            "auth": "$REGISTRY_CREDENTIALS"
+            "username": "$CI_REGISTRY_USER",
+            "password": "$CI_REGISTRY_PASSWORD"
           }
         }
       }

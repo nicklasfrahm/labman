@@ -21,4 +21,4 @@ ADD app.py /app/app.py
 ADD routers/ /app/routers/
 WORKDIR /app
 EXPOSE 5000
-ENTRYPOINT [ "/venv/bin/python3", "-m", "hypercorn", "-c", "hypercorn.toml", "app:app" ]
+ENTRYPOINT [ "/venv/bin/python", "-m", "hypercorn", "-c", "hypercorn.toml", "app:app" ]

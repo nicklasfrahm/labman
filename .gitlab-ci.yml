@@ -1,17 +1,6 @@
 stages:
   - build
 
-services:
-  - name: docker:dind
-    command:
-      - "--experimental"
-
-variables:
-  DOCKER_BUILDKIT: "1"
-  DOCKER_DRIVER: overlay2
-  DOCKER_TLS_CERTDIR: /certs
-  DOCKER_CLI_EXPERIMENTAL: enabled
-
 .buildkit: &buildkit
   stage: build
   image:
@@ -46,6 +35,20 @@ variables:
     - rm ~/.docker/config.json
 
 build-docker-amd64:
+  extends: .buildkit
   variables:
     ARCH: amd64
-  <<: *buildkit
+
+build-docker-arm32v7:
+  extends: .buildkit
+  variables:
+    ARCH: arm32v7
+  tags:
+    - arch=arm32v7
+
+build-docker-arm64v8:
+  extends: .buildkit
+  variables:
+    ARCH: arm64v8
+  tags:
+    - arch=arm64v8

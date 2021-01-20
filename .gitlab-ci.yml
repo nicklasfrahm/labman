@@ -1,5 +1,6 @@
 stages:
   - build
+  - publish
 
 .buildkit: &buildkit
   stage: build
@@ -34,21 +35,57 @@ stages:
     # Remove container registry credentials.
     - rm ~/.docker/config.json
 
-build-docker-amd64:
+build-container-amd64:
   extends: .buildkit
   variables:
     ARCH: amd64
 
-build-docker-arm32v7:
+build-container-arm32v7:
   extends: .buildkit
   variables:
     ARCH: arm32v7
   tags:
     - arch=arm32v7
 
-build-docker-arm64v8:
+build-container-arm64v8:
   extends: .buildkit
   variables:
     ARCH: arm64v8
   tags:
     - arch=arm64v8
+
+publish-container-manifest:
+  stage: publish
+  image: docker:stable-git
+  services:
+    - docker:stable-dind
+  variables:
+    DOCKER_TLS_CERTDIR: "/certs"
+    DOCKER_CLI_EXPERIMENTAL: "enabled"
+  script:
+    # Add container registry credentials.
+    - |
+      mkdir -m 700 -p ~/.docker
+      cat << EOF > ~/.docker/config.json
+      {
+        "auths": {
+          "$CI_REGISTRY": {
+            "username": "$CI_REGISTRY_USER",
+            "password": "$CI_REGISTRY_PASSWORD"
+          }
+        }
+      }
+      EOF
+    # Create container image manifest.
+    - |
+      docker manifest create $CI_REGISTRY_IMAGE \
+        $CI_REGISTRY_IMAGE/arm32v7 \
+        $CI_REGISTRY_IMAGE/arm64v8 \
+        $CI_REGISTRY_IMAGE/amd64
+    # Annotate manifest as it was created on an "amd64" host.
+    - docker manifest annotate --arch arm --variant v7 $CI_REGISTRY_IMAGE $CI_REGISTRY_IMAGE/arm32v7
+    - docker manifest annotate --arch arm64 --variant v8 $CI_REGISTRY_IMAGE $CI_REGISTRY_IMAGE/arm64v8
+    # Push container image manifests.
+    - docker manifest push $CI_REGISTRY_IMAGE
+    # Remove container registry credentials.
+    - rm -~/.docker/config.json

@@ -2,7 +2,7 @@
 
 An example of a REST API with [Python](https://python.org/). It uses [Quart](https://pgjones.gitlab.io/quart/) as the web framework.
 
-[![pipeline status](https://gitlab.com/paperstack-org/application-examples/python3-rest-api/badges/main/pipeline.svg)](https://gitlab.com/paperstack-org/application-examples/python3-rest-api/-/commits/main)
+[![pipeline status](https://gitlab.com/paperstack-org/application-examples/python-rest-api/badges/main/pipeline.svg)](https://gitlab.com/paperstack-org/application-examples/python-rest-api/-/commits/main)
 
 ## Development 🔧
 

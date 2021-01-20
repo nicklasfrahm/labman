@@ -88,4 +88,4 @@ publish-container-manifest:
     # Push container image manifests.
     - docker manifest push $CI_REGISTRY_IMAGE
     # Remove container registry credentials.
-    - rm -~/.docker/config.json
+    - rm ~/.docker/config.json

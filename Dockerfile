@@ -14,6 +14,7 @@ COPY requirements.txt /requirements.txt
 RUN /venv/bin/python -m pip install -r /requirements.txt
 
 # Copy the virtualenv into a distroless image.
+# For more information, please refer to https://github.com/GoogleContainerTools/distroless.
 FROM gcr.io/distroless/python3-debian10 AS run
 COPY --from=build /venv /venv
 ADD hypercorn.toml /app/hypercorn.toml

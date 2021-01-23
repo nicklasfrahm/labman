@@ -63,7 +63,7 @@ jobs:
         id: docker_meta
         uses: crazy-max/ghaction-docker-meta@v1
         with:
-          images: $NAMESPACE/$APP
+          images: ${{ env.NAMESPACE }}/${{ env.APP }}
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
@@ -83,11 +83,11 @@ jobs:
         id: docker_build
         uses: docker/build-push-action@v2
         with:
-          context: ./$APP
-          file: ./$APP/Dockerfile
-          cache-from: type=registry,ref=$NAMESPACE/$APP:latest
+          context: ./${{ env.APP }}
+          file: ./${{ env.APP }}/Dockerfile
+          cache-from: type=registry,ref=${{ env.NAMESPACE }}/${{ env.APP }}:latest
           cache-to: type=inline
-          platforms: $PLATFORMS
+          platforms: ${{ env.PLATFORMS }}
           push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.docker_meta.outputs.tags }}
           labels: ${{ steps.docker_meta.outputs.labels }}

@@ -19,7 +19,6 @@ env:
 jobs:
   test:
     runs-on: ubuntu-latest
-    container: python:3-alpine
     steps:
       - name: Clone repository
         uses: actions/checkout@v2

@@ -160,7 +160,7 @@ jobs:
         id: deploy
         uses: google-github-actions/deploy-cloudrun@v0.2.0
         with:
-          service: ${{ env.GCP_SERVICE }}
+          service: ${{ env.GCP_CLOUD_RUN_SERVICE }}
           image: ${{ env.GCP_CONTAINER_IMAGE }}:main
           region: ${{ env.GCP_REGION }}
           credentials: ${{ secrets.GCP_SA_KEY }}

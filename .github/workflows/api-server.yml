@@ -1,0 +1,74 @@
+name: api-server
+
+on:
+  push:
+    paths:
+      - api-server/**
+    tags:
+      - v*
+  pull_request:
+    paths:
+      - api-server/**
+  workflow_dispatch:
+
+env:
+  IMAGE_NAME: api-server
+  IMAGE_REGISTRY: docker.pkg.github.com
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    services:
+      mongodb:
+        image: mongo
+        env:
+          MONGO_INITDB_ROOT_USERNAME: test
+          MONGO_INITDB_ROOT_PASSWORD: test
+          MONGO_INITDB_DATABASE: test
+        options: >-
+          --health-cmd echo 'db.runCommand("ping").ok' | mongo mongodb://test:test@mongodb:27017/test --quiet
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    container: python:3-alpine
+    steps:
+      - name: Install dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run tests
+        run: pytest
+
+  build:
+    needs: test
+    runs-on: ubuntu-latest
+    if: github.ref == 'refs/heads/main' && github.event_name == 'push'
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Build container image
+        run: docker build ./$IMAGE_NAME -f ./$IMAGE_NAME Dockerfile -t $IMAGE_NAME
+
+      - name: Log on to container registry
+        run: echo "${{ secrets.GITHUB_TOKEN }}" | docker login $IMAGE_REGISTRY -u ${{ github.actor }} --password-stdin
+
+      - name: Tag and push container image
+        run: |
+          IMAGE_ID=$IMAGE_REGISTRY/${{ github.repository }}/$IMAGE_NAME
+
+          # Change all uppercase to lowercase.
+          IMAGE_ID=$(echo $IMAGE_ID | tr '[A-Z]' '[a-z]')
+
+          # Strip git ref prefix from version.
+          VERSION=$(echo "${{ github.ref }}" | sed -e 's,.*/\(.*\),\1,')
+
+          # Strip "v" prefix from tag name.
+          [[ "${{ github.ref }}" == "refs/tags/"* ]] && VERSION=$(echo $VERSION | sed -e 's/^v//')
+
+          # Use Docker "latest" tag convention.
+          [ "$VERSION" == "main" ] && VERSION=latest
+
+          echo IMAGE_ID=$IMAGE_ID
+          echo VERSION=$VERSION
+
+          docker tag $IMAGE_NAME $IMAGE_ID:$VERSION
+          docker push $IMAGE_ID:$VERSION

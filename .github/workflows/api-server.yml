@@ -143,6 +143,9 @@ jobs:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
           service_account_key: ${{ secrets.GCP_SA_KEY }}
 
+      - name: Log in to GCP container registry
+        run: gcloud auth configure-docker
+
       - name: Build and push container image
         id: docker_build
         uses: docker/build-push-action@v2

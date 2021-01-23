@@ -157,13 +157,13 @@ jobs:
           tags: ${{ env.GCP_CONTAINER_IMAGE }}:main
           labels: ${{ steps.docker_meta.outputs.labels }}
 
-    - name: Deploy to GCP Cloud Run
-      id: deploy
-      uses: google-github-actions/deploy-cloudrun@v0.2.0
-      with:
-        service: ${{ env.GCP_SERVICE }}
-        image: ${{ env.GCP_CONTAINER_IMAGE }}:main
-        region: ${{ env.GCP_REGION }}
+      - name: Deploy to GCP Cloud Run
+        id: deploy
+        uses: google-github-actions/deploy-cloudrun@v0.2.0
+        with:
+          service: ${{ env.GCP_SERVICE }}
+          image: ${{ env.GCP_CONTAINER_IMAGE }}:main
+          region: ${{ env.GCP_REGION }}
 
-    - name: Show deployment URL
-      run: echo ${{ steps.deploy.outputs.url }}
+      - name: Show deployment URL
+        run: echo ${{ steps.deploy.outputs.url }}

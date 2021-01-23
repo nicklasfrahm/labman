@@ -2,21 +2,31 @@ name: api-server
 
 on:
   push:
+    branches:
+      - '**'
     paths:
       - api-server/**
-      - .github/**
+      - .github/workflows/api-server.yml
     tags:
       - v*
   pull_request:
+    branches:
+      - '**'
     paths:
       - api-server/**
-      - .github/**
+      - .github/workflows/api-server.yml
+  schedule:
+    - cron:  '0 0 * * *'
   workflow_dispatch:
 
 env:
   NAMESPACE: ${{ github.repository_owner }}/labcloud
   APP: api-server
   PLATFORMS: linux/amd64,linux/arm64
+
+defaults:
+  run:
+    working-directory: ${{ env.APP }}
 
 jobs:
   test:
@@ -36,7 +46,6 @@ jobs:
           python-version: '3.x'
 
       - name: Install dependencies
-        working-directory: ${{ env.APP }}
         run: |
           # Upgrade pip.
           python -m pip install --upgrade pip
@@ -45,11 +54,9 @@ jobs:
           pip install -r requirements.txt
 
       - name: Lint source files
-        working-directory: ${{ env.APP }}
         run: black .
 
       - name: Run tests
-        working-directory: ${{ env.APP }}
         run: pytest
 
   build:

@@ -142,7 +142,6 @@ jobs:
         with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
           service_account_key: ${{ secrets.GCP_SA_KEY }}
-          export_default_credentials: yes
 
       - name: Build and push container image
         id: docker_build
@@ -164,6 +163,7 @@ jobs:
           service: ${{ env.GCP_SERVICE }}
           image: ${{ env.GCP_CONTAINER_IMAGE }}:main
           region: ${{ env.GCP_REGION }}
+          credentials: ${{ secrets.GCP_SA_KEY }}
 
       - name: Show deployment URL
         run: echo ${{ steps.deploy.outputs.url }}

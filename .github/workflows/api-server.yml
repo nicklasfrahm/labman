@@ -142,6 +142,7 @@ jobs:
         with:
           project_id: ${{ secrets.GCP_PROJECT_ID }}
           service_account_key: ${{ secrets.GCP_SA_KEY }}
+          export_default_credentials: yes
 
       - name: Build and push container image
         id: docker_build
@@ -156,13 +157,13 @@ jobs:
           tags: ${{ env.GCP_CONTAINER_IMAGE }}:main
           labels: ${{ steps.docker_meta.outputs.labels }}
 
-      - name: Deploy to GCP Cloud Run
-        run: |-
-          gcloud run deploy ${{ env.SERVICE }} \
-            --region ${{ env.REGION }} \
-            --image ${{ env.GCP_CONTAINER_IMAGE }}:main \
-            --platform "managed" \
-            --port 5000 \
-            --cpu 1 \
-            --memory 128Mi \
-            --quiet
+    - name: Deploy to GCP Cloud Run
+      id: deploy
+      uses: google-github-actions/deploy-cloudrun@v0.2.0
+      with:
+        service: ${{ env.GCP_SERVICE }}
+        image: ${{ env.GCP_CONTAINER_IMAGE }}:main
+        region: ${{ env.GCP_REGION }}
+
+    - name: Show deployment URL
+      run: echo ${{ steps.deploy.outputs.url }}

@@ -4,11 +4,13 @@ on:
   push:
     paths:
       - api-server/**
+      - .github/workflows/api-server.yml
     tags:
       - v*
   pull_request:
     paths:
       - api-server/**
+      - .github/workflows/api-server.yml
   workflow_dispatch:
 
 env:

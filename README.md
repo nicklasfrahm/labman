@@ -1,16 +1,14 @@
-# Python REST API 🐍
+# LabCloud 🧪
 
-An example of a REST API with [Python](https://python.org/). It uses [Quart](https://pgjones.gitlab.io/quart/) as the web framework.
+A cloud-based management platform for laboratories and workshops.
 
-[![pipeline status](https://gitlab.com/paperstack-org/application-examples/python-rest-api/badges/main/pipeline.svg)](https://gitlab.com/paperstack-org/application-examples/python-rest-api/-/commits/main)
+## Components 📦
 
-## Development 🔧
+LabCloud consists of several applications that are all collected in this repository.
 
-Start the development container and run `QUART_APP=app:app quart run`. The application will automatically restart on code changes and you can visit it at [localhost:5000](http://localhost:5000/health).
+### API Server 🔌
 
-## Production 🚀
-
-To run the application in production execute `hypercorn -c hypercorn.toml app:app`.
+This application is a REST API that manages the data of the platform and is located in the [`api-server/`](./api-server/README.md) folder.
 
 ## License 📄
 

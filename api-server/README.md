@@ -4,7 +4,7 @@ This application is written in [Python](https://python.org/) and uses [Quart](ht
 
 ## Prerequisites 🚧
 
-As editor, we recommend the free editor [VS Code](https://code.visualstudio.com/). You can develop this application with two different workflows that are described below.
+As editor we recommend the free [VS Code](https://code.visualstudio.com/). You can develop this application with two different workflows that are described below.
 
 ### Development container 🐳
 

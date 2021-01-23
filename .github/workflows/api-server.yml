@@ -129,7 +129,7 @@ jobs:
         uses: crazy-max/ghaction-docker-meta@v1
         with:
           images: |
-            ${{ env.GCR_CONTAINER_IMAGE }}
+            ${{ env.GCP_CONTAINER_IMAGE }}
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
@@ -153,14 +153,14 @@ jobs:
           cache-to: type=inline
           platforms: ${{ env.PLATFORMS }}
           push: yes
-          tags: ${{ env.GCR_CONTAINER_IMAGE }}:main
+          tags: ${{ env.GCP_CONTAINER_IMAGE }}:main
           labels: ${{ steps.docker_meta.outputs.labels }}
 
       - name: Deploy to GCP Cloud Run
         run: |-
           gcloud run deploy ${{ env.SERVICE }} \
             --region ${{ env.REGION }} \
-            --image ${{ env.GCR_CONTAINER_IMAGE }}:main \
+            --image ${{ env.GCP_CONTAINER_IMAGE }}:main \
             --platform "managed" \
             --port 5000 \
             --cpu 1 \

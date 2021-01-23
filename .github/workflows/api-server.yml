@@ -152,8 +152,6 @@ jobs:
         with:
           context: ./${{ env.APP }}
           file: ./${{ env.APP }}/Dockerfile
-          cache-from: type=registry,ref=${{ env.GHCR_CONTAINER_IMAGE }}:main
-          cache-to: type=inline
           platforms: ${{ env.PLATFORMS }}
           push: yes
           tags: ${{ env.GCP_CONTAINER_IMAGE }}:main

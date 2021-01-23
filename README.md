@@ -8,6 +8,8 @@ LabCloud consists of several applications that are all collected in this reposit
 
 ### API Server 🔌
 
+![api-server](https://github.com/nicklasfrahm/labcloud/workflows/api-server/badge.svg?branch=main)
+
 This application is a REST API that manages the data of the platform and is located in the [`api-server/`](./api-server/README.md) folder.
 
 ## License 📄

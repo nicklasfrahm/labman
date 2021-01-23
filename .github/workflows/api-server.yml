@@ -20,8 +20,8 @@ on:
   workflow_dispatch:
 
 env:
-  NAMESPACE: ${{ github.repository_owner }}/labcloud
   APP: api-server
+  CONTAINER_IMAGE: ${{ github.repository_owner }}/labcloud-api-server
   PLATFORMS: linux/amd64,linux/arm64
 
 defaults:
@@ -70,7 +70,7 @@ jobs:
         id: docker_meta
         uses: crazy-max/ghaction-docker-meta@v1
         with:
-          images: ${{ env.NAMESPACE }}/${{ env.APP }}
+          images: ${{ env.CONTAINER_IMAGE }}
 
       - name: Set up QEMU
         uses: docker/setup-qemu-action@v1
@@ -92,7 +92,7 @@ jobs:
         with:
           context: ./${{ env.APP }}
           file: ./${{ env.APP }}/Dockerfile
-          cache-from: type=registry,ref=${{ env.NAMESPACE }}/${{ env.APP }}:latest
+          cache-from: type=registry,ref=${{ env.CONTAINER_IMAGE }}:latest
           cache-to: type=inline
           platforms: ${{ env.PLATFORMS }}
           push: ${{ github.event_name != 'pull_request' }}

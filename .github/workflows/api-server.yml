@@ -116,7 +116,7 @@ jobs:
         uses: peter-evans/dockerhub-description@v2
         with:
           username: ${{ github.repository_owner }}
-          password: ${{ secrets.DHCR_PAT }}
+          password: ${{ secrets.DHCR_PASSWORD }}
           repository: ${{ github.repository_owner }}/labcloud-${{ env.APP }}
 
   deploy:

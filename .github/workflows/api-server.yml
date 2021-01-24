@@ -124,7 +124,7 @@ jobs:
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     environment:
-      name: production-labman-${{ env.APP }}
+      name: production-labman-api-server
       url: https://${{ env.PRODUCTION_HOST }}/health
     steps:
       - name: Clone repository

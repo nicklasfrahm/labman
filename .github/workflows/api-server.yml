@@ -22,10 +22,10 @@ on:
 
 env:
   APP: api-server
-  PRODUCTION_HOST: api.labcloud.intric.dk
+  PRODUCTION_HOST: api.labman.intric.dk
   PLATFORMS: linux/amd64,linux/arm64
-  GHCR_CONTAINER_IMAGE: ghcr.io/${{ github.repository_owner }}/labcloud-api-server
-  DHCR_CONTAINER_IMAGE: registry.hub.docker.com/${{ github.repository_owner }}/labcloud-api-server
+  GHCR_CONTAINER_IMAGE: ghcr.io/${{ github.repository }}-api-server
+  DHCR_CONTAINER_IMAGE: registry.hub.docker.com/${{ github.repository }}-api-server
 
 defaults:
   run:
@@ -117,14 +117,14 @@ jobs:
         with:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.DHCR_PASSWORD }}
-          repository: ${{ github.repository_owner }}/labcloud-${{ env.APP }}
+          repository: ${{ github.repository }}-${{ env.APP }}
 
   deploy:
     needs: build
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'
     runs-on: ubuntu-latest
     environment:
-      name: production-api-server
+      name: production-labman-${{ env.APP }}
       url: https://${{ env.PRODUCTION_HOST }}/health
     steps:
       - name: Clone repository

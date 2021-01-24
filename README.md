@@ -1,16 +1,16 @@
-# LabCloud 🧪
+# LabMan 🧪
 
 A cloud-based management platform for laboratories and workshops.
 
 ## Components 📦
 
-LabCloud consists of several applications that are all collected in this repository.
+LabMan consists of several applications that are all collected in this repository.
 
 ### API Server 🔌
 
-![api-server](https://github.com/nicklasfrahm/labcloud/workflows/api-server/badge.svg?branch=main)
+![api-server](https://github.com/nicklasfrahm/labman/workflows/api-server/badge.svg?branch=main)
 
-This application is a REST API that manages the data of the platform and is located in the [`api-server/`](./api-server) folder.
+This application is a REST API that manages the data of the platform and is located in the [`api-server/`](https://github.com/nicklasfrahm/labman/tree/main/api-server) folder.
 
 ## License 📄
 

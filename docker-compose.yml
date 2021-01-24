@@ -1,0 +1,38 @@
+version: '3'
+
+services:
+  proxy-nginx:
+    image: jwilder/nginx-proxy
+    ports:
+      - '80:80'
+      - '443:443'
+    volumes:
+      - certs:/etc/nginx/certs
+      - vhosts:/etc/nginx/vhost.d
+      - html:/usr/share/nginx/html
+      - /var/run/docker.sock:/tmp/docker.sock:ro
+    labels:
+      - 'com.github.jrcs.letsencrypt_nginx_proxy_companion.nginx_proxy'
+
+  proxy-nginx-letsencrypt:
+    image: jrcs/letsencrypt-nginx-proxy-companion
+    volumes:
+      - certs:/etc/nginx/certs
+      - vhosts:/etc/nginx/vhost.d
+      - html:/usr/share/nginx/html
+      - acme:/etc/acme.sh
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+
+  application-labcloud-api-server:
+    image: ghcr.io/nicklasfrahm/labcloud-api-server:main
+    restart: always
+    environment:
+      VIRTUAL_PORT: '5000'
+      VIRTUAL_HOST: 'api.labcloud.intric.dk'
+      LETSENCRYPT_HOST: 'api.labcloud.intric.dk'
+
+volumes:
+  certs:
+  vhosts:
+  html:
+  acme:

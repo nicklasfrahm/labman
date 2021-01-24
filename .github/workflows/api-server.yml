@@ -112,6 +112,13 @@ jobs:
           tags: ${{ steps.docker_meta.outputs.tags }}
           labels: ${{ steps.docker_meta.outputs.labels }}
 
+      - name: Update Docker Hub description
+        uses: peter-evans/dockerhub-description@v2
+        with:
+          username: ${{ github.repository_owner }}
+          password: ${{ secrets.DHCR_PAT }}
+          repository: ${{ github.repository_owner }}/labcloud-${{ env.APP }}
+
   deploy:
     needs: build
     if: github.ref == 'refs/heads/main' && github.event_name != 'pull_request'

@@ -6,9 +6,9 @@ import sys
 # Cache the client for subsequent connection attempts.
 motor = None
 
-# Initialize database driver.
-def connect(app, mongo_uri):
-    """Intialze the motor driver instance."""
+
+def initialize(app, mongo_uri):
+    """Configure the MongoDB database driver."""
     global motor
 
     if motor is None:

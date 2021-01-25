@@ -4,7 +4,7 @@ from os import getenv
 from logging import getLogger
 from pymongo.errors import OperationFailure, ConnectionFailure, ConfigurationError
 from src.routers import health, organization
-from src.util import connect
+from src.util import initialize
 import asyncio
 import sys
 
@@ -79,7 +79,7 @@ async def unexpected_exception(err):
 
 async def main():
     # Initialize connection to MongoDB server.
-    connect(app, mongo_uri)
+    initialize(app, mongo_uri)
 
     if __name__ == "__main__":
         app.run()

@@ -12,14 +12,15 @@ RUN apt-get update && \
 FROM dependencies AS build
 COPY requirements.txt /requirements.txt
 RUN /venv/bin/python -m pip install -r /requirements.txt
+ADD src/ /src/
+RUN find . -name "*_test.py" -delete
 
 # Copy the virtualenv into a distroless image.
 # For more information, please refer to https://github.com/GoogleContainerTools/distroless.
 FROM gcr.io/distroless/python3-debian10 AS run
 COPY --from=build /venv /venv
+COPY --from=build /src /app/src
 ADD hypercorn.toml /app/hypercorn.toml
-ADD src/ /app/src/
-RUN rm -rf *_test.py
 WORKDIR /app
 EXPOSE 5000
 ENTRYPOINT [ "/venv/bin/python", "-m", "hypercorn", "-c", "hypercorn.toml", "src.app:app" ]

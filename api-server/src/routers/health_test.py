@@ -1,7 +1,7 @@
 import pytest
 import re
 from unittest import TestCase
-from app import app
+from src.app import app
 
 
 @pytest.fixture(name="test_app")

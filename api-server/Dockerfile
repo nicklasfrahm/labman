@@ -18,8 +18,8 @@ RUN /venv/bin/python -m pip install -r /requirements.txt
 FROM gcr.io/distroless/python3-debian10 AS run
 COPY --from=build /venv /venv
 ADD hypercorn.toml /app/hypercorn.toml
-ADD app.py /app/app.py
-ADD routers/ /app/routers/
+ADD src/ /app/src/
+RUN rm -rf *_test.py
 WORKDIR /app
 EXPOSE 5000
-ENTRYPOINT [ "/venv/bin/python", "-m", "hypercorn", "-c", "hypercorn.toml", "app:app" ]
+ENTRYPOINT [ "/venv/bin/python", "-m", "hypercorn", "-c", "hypercorn.toml", "src.app:app" ]

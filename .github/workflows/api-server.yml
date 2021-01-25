@@ -117,6 +117,7 @@ jobs:
 
       - name: Update Docker Hub description
         uses: peter-evans/dockerhub-description@v2
+        if: github.ref == 'refs/heads/main'
         with:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.DHCR_PASSWORD }}

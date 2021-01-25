@@ -22,8 +22,8 @@ $ pip install -r requirements.txt
 
 ## Development 🔧
 
-Run `QUART_APP=app:app quart run` and the application will automatically restart on code changes. You can then visit it at [localhost:5000](http://localhost:5000/health).
+Run `QUART_APP=src.app:app quart run` and the application will automatically restart on code changes. You can then visit it at [localhost:5000](http://localhost:5000/health).
 
 ## Production 🚀
 
-To run the application in production execute `hypercorn -c hypercorn.toml app:app`.
+To run the application in production execute `hypercorn -c hypercorn.toml src.app:app`.

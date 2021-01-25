@@ -26,7 +26,9 @@ pytest==6.2.1
 pytest-asyncio==0.14.0
 python-dotenv==0.15.0
 Quart==0.14.1
+Quart-Motor==2.4.4
 regex==2020.11.13
+six==1.15.0
 toml==0.10.2
 typed-ast==1.4.2
 typing-extensions==3.7.4.3

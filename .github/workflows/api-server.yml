@@ -36,7 +36,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Clone repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v2.3.4
 
       - name: Configure MongoDB
         uses: supercharge/mongodb-github-action@1.3.0
@@ -67,7 +67,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Clone repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v2.3.4
 
       - name: Generate container meta
         id: docker_meta
@@ -128,7 +128,7 @@ jobs:
       url: https://${{ env.PRODUCTION_HOST }}/health
     steps:
       - name: Clone repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v2.3.4
 
       - name: Upload docker-compose.yaml
         uses: appleboy/scp-action@master

@@ -113,7 +113,7 @@ jobs:
           labels: ${{ steps.docker_meta.outputs.labels }}
 
       - name: Update Docker Hub description
-        uses: peter-evans/dockerhub-description@v2
+        uses: peter-evans/dockerhub-description@v3
         with:
           username: ${{ github.repository_owner }}
           password: ${{ secrets.DHCR_PASSWORD }}
